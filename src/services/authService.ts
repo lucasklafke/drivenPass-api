@@ -7,7 +7,8 @@ dotenv.config();
 async function verifyUserAlreadyExists(email : string) {
         const user = await authRepository.getUserByEmail(email);
         if (user) {
-                throw new Error("User already exists");
+                console.log(user)
+                throw  {type : "conflict", message: "User already exists"}
         }
 }
 function generateToken(email : string){
@@ -18,6 +19,7 @@ function generateToken(email : string){
 
 export async function signUp({email, password} : User){
         await verifyUserAlreadyExists(email)
+        console.log("user")
         const user = await authRepository.createUser(email, password);
         const token = generateToken(email)
         await authRepository.createSession(token, user)

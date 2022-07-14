@@ -1,7 +1,11 @@
-import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
-class error {
-        error : Error
-}
-export default async function errorHandler(Error : error, req : Request, res : Response, next : NextFunction) {
-  
-}
+import { ErrorRequestHandler } from "express";
+
+
+const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
+  if (err.type === "conflict") return res.status(409).send(err.message);
+
+  res.status(500).send("Something went wrong");
+
+  next(err);
+};
+export default errorHandler;
