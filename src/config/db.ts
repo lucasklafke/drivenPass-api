@@ -1,9 +1,5 @@
-import pg from "pg"
+import pkg from "@prisma/client"
 
-const { Pool } = pg;
-
-const connection = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
-
-export default connection;
+const { PrismaClient } = pkg;
+const client = new PrismaClient();
+export default client;
