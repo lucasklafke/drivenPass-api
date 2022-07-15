@@ -7,14 +7,14 @@ export interface User {
 export async function signUp(req: Request, res: Response) {
   const { email, password } : User = req.body;
   const token = await authService.signUp({email, password});
-//   const token = await user.generateAuthToken();
   res.status(201).send({ token });
 
 }
 
 export async function signIn(req: Request, res: Response) {
-        const { email, password } : User = req.body;
-        const user = await authService.signIn({email, password});
-        // const token = await user.generateAuthToken();
-        // res.send({ user, token });
+  const { email, password } : User = req.body;
+  console.log("entrei")
+  const token = await authService.signIn({email, password});
+  res.status(200).send({ token });
+      
 }

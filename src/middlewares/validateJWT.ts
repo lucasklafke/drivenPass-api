@@ -1,16 +1,20 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-
+import { User } from "@prisma/client";
 export async function validateJWT(req: Request, res: Response, next: NextFunction) {
-    const token : string = req.headers["x-access-token"].toString();
+    const {email, password} : User = req.body;
+
+    const authorization = req.headers["authorization"];
+    const token : string = authorization.replace("Bearer ", "").trim()
     if (!token) {
-        return res.status(401).send({ message: "No token provided" });
+        throw {type : "unauthorized", message : "No token provided"}
     }
-    try {
-        const jwtData = jwt.verify(token, process.env.JWT_SECRET);
-        next();
-        res.locals.jwtData  = jwtData;
-    } catch (err) {
-        return res.status(401).send({ message: "Invalid token" });
+    
+    const jwtData  = jwt.verify(token, process.env.JWT_SECRET);
+    if(jwtData["email"] !== email) {
+        console.log("token",jwtData)
+        throw {type : "unauthorized", message : "Invalid User"}
     }
+    res.locals.jwtData  = jwtData;
+    next();
 }
