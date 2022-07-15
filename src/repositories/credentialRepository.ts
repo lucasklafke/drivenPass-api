@@ -22,3 +22,22 @@ export async function getUserCredentialByCredentialName(userId: number, credenti
   });
   return credential;
 }
+
+export async function findManyCredentials(userId: number) {
+  const credentials : CreateCredentialData[] = await client.credential.findMany({
+    where: {
+        userId,
+    },
+  });
+  return credentials;
+}
+
+export async function findOneCredential(credentialId: number, userId: number) {
+  const credential : CreateCredentialData[] = await client.credential.findMany({
+    where: {
+        id: credentialId,
+        userId
+    },
+  });
+  return credential[0];
+}

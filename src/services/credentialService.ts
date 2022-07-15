@@ -46,3 +46,28 @@ export async function createCredential(CreateCredentialData: CreateCredentialDat
         await credentialRepository.createCredential(data)
         return
 }
+
+export async function getOneCredential(credentialId:number, userId:number) {
+        
+        const credential : CreateCredentialData = await credentialRepository.findOneCredential(credentialId, userId)
+        if(!credential) {
+                throw {type : "notFound", message : "Credential not found"}
+        }
+        credential.password = decryptPassword(credential.password)
+        return credential
+}
+
+
+export async function getManyCredentials(userId:number) {
+        
+        const credentials : CreateCredentialData[] = await credentialRepository.findManyCredentials(userId)
+        if(credentials.length === 0) {
+                throw {type : "notFound", message : "Credentials not found"}
+        }
+        const formatedCredentials = credentials.map(credential => {
+                credential.password = decryptPassword(credential.password)
+                return credential
+        })
+        return formatedCredentials
+        
+}
