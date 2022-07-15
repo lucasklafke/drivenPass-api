@@ -10,8 +10,8 @@ async function verifyUserAlreadyExists(email : string) {
         return user
 }
 
-function generateToken(email : string){
-        return jwt.sign({email}, process.env.JWT_SECRET, {expiresIn : "1h"})
+function generateToken(email : string, userId : number){
+        return jwt.sign({email, userId}, process.env.JWT_SECRET, {expiresIn : "1h"})
         
 }
 function comparePassword(password : string, hash : string){
@@ -29,7 +29,7 @@ export async function signUp({email, password} : User){
         }
         const hashPassword = generateHashPassword(password)
         const user = await authRepository.createUser(email, hashPassword);
-        const token = generateToken(email)
+        const token = generateToken(email, user.id)
         await authRepository.createSession(token, user)
         return token
 }
@@ -40,7 +40,7 @@ export async function signIn({email, password} : User){
         if(!comparedPassword){
                 throw {type : "unauthorized", message : "Invalid password"}
         }
-        const token = generateToken(email)
+        const token = generateToken(email, user.id)
         await authRepository.createSession(token, user)
         return token
 }
