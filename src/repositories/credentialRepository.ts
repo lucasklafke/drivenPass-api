@@ -41,3 +41,14 @@ export async function findOneCredential(credentialId: number, userId: number) {
   });
   return credential[0];
 }
+
+export async function deleteCredential(credentialId : number){
+  const credential = await client.credential.delete(
+    {
+      where: {
+        id: credentialId,
+      }
+    }
+  );
+  return credential;
+}

@@ -17,6 +17,7 @@ model User {
   createdAt  DateTime     @default(now())
   Credential Credential[]
   Session    Session[]
+  Note       Note[]
 }
 
 model Credential {
@@ -30,9 +31,18 @@ model Credential {
 }
 
 model Session {
-  id          Int      @id @default(autoincrement())
-  token       String
-  userId      Int
-  user        User     @relation(fields: [userId], references: [id])
-  createdAt   DateTime @default(now())
+  id        Int      @id @default(autoincrement())
+  token     String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Note {
+  id        Int      @id @default(autoincrement())
+  title     String
+  note      String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
 }

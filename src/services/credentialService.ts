@@ -71,3 +71,12 @@ export async function getManyCredentials(userId:number) {
         return formatedCredentials
         
 }
+
+export async function deleteCredential(credentialId:number, userId:number) {
+        const credential : CreateCredentialData = await credentialRepository.findOneCredential(credentialId, userId)
+        if(!credential) {
+                throw {type : "notFound", message : "Credential not found"}
+        }
+        await credentialRepository.deleteCredential(credentialId)
+        return
+}

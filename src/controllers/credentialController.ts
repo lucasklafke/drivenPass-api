@@ -21,3 +21,10 @@ export async function getCredentials(req: Request, res: Response) {
   res.status(200).send(credentials)
 
 }
+
+export async function deleteCredential(req: Request, res: Response) {
+  const {id} = req.params;
+  const { jwtData } = res.locals;
+  await credentialService.deleteCredential(Number(id), jwtData.userId);
+  res.sendStatus(200);
+}
