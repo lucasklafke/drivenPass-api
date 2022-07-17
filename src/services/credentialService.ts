@@ -11,6 +11,7 @@ async function verifyCredentialNameAlreadyExist(credentialName : string, userId 
         const credentialExist = await credentialRepository.getUserCredentialByCredentialName(userId, credentialName)
         return credentialExist
 }
+
 function encryptPassword(password : string) {
     const cryptrInstance = new cryptr(process.env.CRYPTR_SECRET)
     return cryptrInstance.encrypt(password)
