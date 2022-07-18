@@ -25,3 +25,36 @@ export async function createCard(data : CardData, userId : number) {
 }
 
 
+export async function getOneCard(cardId:number, userId:number) {
+        
+        const card : CardData = await cardRepository.findOneCard(cardId, userId)
+        if(!card) {
+                throw {type : "notFound", message : "Card not found"}
+        }
+        card.cvv = decryptPassword(card.cvv)
+        card.password = decryptPassword(card.password)
+        return card
+}
+
+
+export async function getManyCards(userId:number) {
+        
+        const cards : CardData[] = await cardRepository.findManyCards(userId)
+        if(cards.length === 0) {
+                throw {type : "notFound", message : "Cards not found"}
+        }
+        const formatedCards = cards.map(card => {
+                card.password = decryptPassword(card.password)
+                card.cvv = decryptPassword(card.cvv)
+                return card
+        })
+        return formatedCards     
+}
+
+export async function deleteCard(cardId:number, userId:number) {
+        const card : CardData = await cardRepository.findOneCard(cardId, userId)
+        if(!card) {
+                throw {type : "notFound", message : "Card not found"}
+        }
+        await cardRepository.deleteCard(cardId)
+}
