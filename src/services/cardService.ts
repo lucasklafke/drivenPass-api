@@ -1,4 +1,5 @@
 import {CardData} from "../controllers/cardController.js"
+import {Card} from "@prisma/client"
 import * as cardRepository from "../repositories/cardRepository.js";
 import { encryptPassword, decryptPassword } from "../utils/cryptr.js";
 
@@ -27,9 +28,12 @@ export async function createCard(data : CardData, userId : number) {
 
 export async function getOneCard(cardId:number, userId:number) {
         
-        const card : CardData = await cardRepository.findOneCard(cardId, userId)
+        const card : Card = await cardRepository.findOneCard(cardId, userId)
         if(!card) {
                 throw {type : "notFound", message : "Card not found"}
+        }
+        if(card.userId !== userId){
+                throw {type : "unauthorized", message : "You are not allowed to access this card"}
         }
         card.cvv = decryptPassword(card.cvv)
         card.password = decryptPassword(card.password)
@@ -52,9 +56,12 @@ export async function getManyCards(userId:number) {
 }
 
 export async function deleteCard(cardId:number, userId:number) {
-        const card : CardData = await cardRepository.findOneCard(cardId, userId)
+        const card : Card = await cardRepository.findOneCard(cardId, userId)
         if(!card) {
                 throw {type : "notFound", message : "Card not found"}
+        }
+        if(card.userId !== userId){
+                throw {type : "unauthorized", message : "You are not allowed to access this card"}
         }
         await cardRepository.deleteCard(cardId)
 }
