@@ -1,25 +1,13 @@
 import { Credential } from "@prisma/client"
 import * as credentialRepository from "../repositories/credentialRepository.js"
 import {getUserByEmail} from "../repositories/authRepository.js" 
-import cryptr from "cryptr"
-import dotenv from "dotenv"
-dotenv.config()
+import { encryptPassword, decryptPassword } from "../utils/cryptr.js"
 
 export type CreateCredentialData = Omit<Credential, "id">
 
 async function verifyCredentialNameAlreadyExist(credentialName : string, userId : number) {
         const credentialExist = await credentialRepository.getUserCredentialByCredentialName(userId, credentialName)
         return credentialExist
-}
-
-function encryptPassword(password : string) {
-    const cryptrInstance = new cryptr(process.env.CRYPTR_SECRET)
-    return cryptrInstance.encrypt(password)
-}
-
-function decryptPassword(encryptedPassword : string) {
-    const cryptrInstance = new cryptr(process.env.CRYPTR_SECRET)
-    return cryptrInstance.decrypt(encryptedPassword)
 }
 
 export async function createCredential(CreateCredentialData: CreateCredentialData, email: string) {

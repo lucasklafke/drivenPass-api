@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -15,9 +12,10 @@ model User {
   email      String
   password   String
   createdAt  DateTime     @default(now())
+  Card       Card[]
   Credential Credential[]
-  Session    Session[]
   Note       Note[]
+  Session    Session[]
 }
 
 model Credential {
@@ -32,10 +30,10 @@ model Credential {
 
 model Session {
   id        Int      @id @default(autoincrement())
-  token     String
   userId    Int
-  user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
+  token     String
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Note {
@@ -43,6 +41,20 @@ model Note {
   title     String
   note      String
   userId    Int
-  user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Card {
+  id         Int      @id @default(autoincrement())
+  title      String
+  userId     Int
+  number     String
+  name       String
+  password   String
+  cvv        String
+  expireDate String
+  type       String
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
 }
